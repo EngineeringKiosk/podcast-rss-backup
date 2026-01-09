@@ -1,0 +1,37 @@
+name: RSS Feed Backup
+
+on:
+  # Run monthly on the 1st day at 00:00 UTC
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run RSS backup script
+        run: |
+          chmod +x ./scripts/backup-rss.sh
+          ./scripts/backup-rss.sh https://engineeringkiosk.dev/podcast/rss
+
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_OUTPUT
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: RSS feed backup ${{ steps.date.outputs.date }}"
+          commit_user_name: "GitHub Actions Bot"
+          commit_user_email: "actions@github.com"
+          commit_author: "GitHub Actions Bot <actions@github.com>"
+          file_pattern: "rss_feed_backup/*.xml rss_feed_backup/*.json"
+          skip_dirty_check: false
+          skip_fetch: true

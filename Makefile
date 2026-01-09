@@ -6,5 +6,4 @@ help: ## Outputs the help
 
 .PHONY: rss-backup
 rss-backup: ## Backup the RSS feed
-	mkdir -p rss_feed_backup
-	curl https://engineeringkiosk.dev/podcast/rss -L > ./rss_feed_backup/$$(date +%Y-%m-%d).xml
+	./scripts/backup-rss.sh https://engineeringkiosk.dev/podcast/rss
