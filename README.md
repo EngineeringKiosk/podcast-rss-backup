@@ -54,4 +54,7 @@ Backups are automatically committed to the repository.
 | Command | Description |
 |---------|-------------|
 | `make help` | Show available commands |
+| `make init` | Check pre-requisites (curl, python3) |
+| `make init-ruff` | Check if ruff is installed |
+| `make format` | Format Python scripts with ruff |
 | `make rss-backup` | Backup the RSS feed |
