@@ -10,6 +10,9 @@
 
 set -euo pipefail
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Configuration
 BACKUP_DIR="rss_feed_backup"
 DATE=$(date +%Y-%m-%d)
@@ -21,29 +24,53 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-# Function to print error messages
-error() {
-    echo -e "${RED}ERROR: $1${NC}" >&2
+# Function to get current timestamp in European format
+timestamp() {
+    date +"%d.%m.%Y %H:%M:%S"
 }
 
-# Function to print success messages
+# Function to print log messages with timestamp
+log() {
+    echo -e "[$(timestamp)] $1"
+}
+
+# Function to print error messages with timestamp
+error() {
+    echo -e "[$(timestamp)] ${RED}ERROR: $1${NC}" >&2
+}
+
+# Function to print success messages with timestamp
 success() {
-    echo -e "${GREEN}$1${NC}"
+    echo -e "[$(timestamp)] ${GREEN}$1${NC}"
 }
 
 # Function to show usage
 usage() {
-    echo "Usage: $0 <RSS_FEED_URL>"
-    echo ""
-    echo "Downloads an RSS feed and stores it as a backup."
-    echo "Also captures request and response headers in JSON format."
-    echo ""
-    echo "Arguments:"
-    echo "  RSS_FEED_URL    The URL of the RSS feed to backup"
-    echo ""
-    echo "Example:"
-    echo "  $0 https://engineeringkiosk.dev/podcast/rss"
+    log "Usage: $0 <RSS_FEED_URL>"
+    log ""
+    log "Downloads an RSS feed and stores it as a backup."
+    log "Also captures request and response headers in JSON format."
+    log ""
+    log "Arguments:"
+    log "  RSS_FEED_URL    The URL of the RSS feed to backup"
+    log ""
+    log "Example:"
+    log "  $0 https://engineeringkiosk.dev/podcast/rss"
 }
+
+# Function to check if a command exists
+check_command() {
+    if ! command -v "$1" &> /dev/null; then
+        error "Required command '$1' is not installed. Please install it and try again."
+        exit 1
+    fi
+}
+
+# Pre-requisite checks
+log "Checking pre-requisites..."
+check_command "curl"
+check_command "python3"
+log "All pre-requisites satisfied."
 
 # Check if URL argument is provided
 if [[ $# -lt 1 ]]; then
@@ -73,9 +100,9 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo "Starting RSS feed backup..."
-echo "URL: $RSS_URL"
-echo "Date: $DATE"
+log "Starting RSS feed backup..."
+log "URL: $RSS_URL"
+log "Date: $DATE"
 
 # Download the RSS feed with headers
 # -L: Follow redirects
@@ -84,7 +111,7 @@ echo "Date: $DATE"
 # -S: Show errors
 # -f: Fail on HTTP errors
 # --compressed: Request compressed response and decompress
-echo "Downloading RSS feed..."
+log "Downloading RSS feed..."
 
 HTTP_CODE=$(curl \
     -L \
@@ -122,54 +149,19 @@ if ! head -c 100 "$BACKUP_FILE" | grep -q "<?xml\|<rss\|<feed"; then
     exit 1
 fi
 
-echo "Creating headers JSON file..."
+log "Creating headers JSON file..."
 
-# Convert headers to JSON and save
-python3 << EOF > "$HEADERS_FILE"
-import json
-from datetime import datetime, timezone
-
-# Parse response headers
-response_headers = {}
-with open('$RESPONSE_HEADERS_TMP', 'r') as f:
-    for line in f:
-        line = line.strip()
-        if not line:
-            continue
-        if line.startswith('HTTP/'):
-            response_headers['status_line'] = line
-        elif ':' in line:
-            key, value = line.split(':', 1)
-            response_headers[key.strip()] = value.strip()
-
-# Request headers (as configured in curl)
-request_headers = {
-    "User-Agent": "curl/RSS-Backup-Script",
-    "Accept": "application/rss+xml, application/xml, text/xml, */*",
-    "Accept-Encoding": "gzip, deflate"
-}
-
-# Create the final JSON structure
-output = {
-    "backup_timestamp": datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
-    "url": "$RSS_URL",
-    "request": {
-        "method": "GET",
-        "headers": request_headers
-    },
-    "response": {
-        "http_code": $HTTP_CODE,
-        "headers": response_headers
-    }
-}
-
-print(json.dumps(output, indent=2))
-EOF
+# Generate headers JSON using external Python script
+python3 "${SCRIPT_DIR}/generate-headers-json.py" \
+    "$RESPONSE_HEADERS_TMP" \
+    "$RSS_URL" \
+    "$HTTP_CODE" \
+    "$HEADERS_FILE"
 
 # Output summary
 FILESIZE=$(wc -c < "$BACKUP_FILE" | tr -d ' ')
 success "Backup completed successfully!"
-echo "  RSS backup:     $BACKUP_FILE ($FILESIZE bytes)"
-echo "  Headers backup: $HEADERS_FILE"
+log "  RSS backup:     $BACKUP_FILE ($FILESIZE bytes)"
+log "  Headers backup: $HEADERS_FILE"
 
 exit 0
