@@ -58,3 +58,7 @@ Backups are automatically committed to the repository.
 | `make init-ruff` | Check if ruff is installed |
 | `make format` | Format Python scripts with ruff |
 | `make rss-backup` | Backup the RSS feed |
+
+## Dependencies
+
+Dependencies are managed by [Renovate Bot/Mend: Dashboard](https://developer.mend.io/github/EngineeringKiosk).
