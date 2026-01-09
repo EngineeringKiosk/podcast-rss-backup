@@ -10,6 +10,14 @@ init: ## Check pre-requisites (curl, python3)
 	@command -v python3 >/dev/null 2>&1 || { echo "Error: python3 is not installed"; exit 1; }
 	@echo "All pre-requisites satisfied."
 
+.PHONY: init-ruff
+init-ruff: ## Check if ruff is installed
+	@command -v ruff >/dev/null 2>&1 || { echo "Error: ruff is not installed. Install with: pip install ruff"; exit 1; }
+
+.PHONY: format
+format: init-ruff ## Format Python scripts with ruff
+	ruff format scripts/
+
 .PHONY: rss-backup
 rss-backup: init ## Backup the RSS feed
 	./scripts/backup-rss.sh https://engineeringkiosk.dev/podcast/rss
