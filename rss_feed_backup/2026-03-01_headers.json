@@ -1,0 +1,40 @@
+{
+  "backup_timestamp": "2026-03-01T02:07:29.762218Z",
+  "url": "https://engineeringkiosk.dev/podcast/rss",
+  "request": {
+    "method": "GET",
+    "headers": {
+      "User-Agent": "curl/RSS-Backup-Script",
+      "Accept": "application/rss+xml, application/xml, text/xml, */*",
+      "Accept-Encoding": "gzip, deflate"
+    }
+  },
+  "response": {
+    "http_code": 200,
+    "headers": {
+      "status_line": "HTTP/2 200",
+      "age": "88",
+      "cache-control": "public,max-age=0,must-revalidate",
+      "cache-status": "\"Netlify Edge\"; hit",
+      "content-type": "text/xml",
+      "date": "Sun, 01 Mar 2026 02:06:01 GMT",
+      "location": "https://feeds.redcircle.com/0ecfdfd7-fda1-4c3d-9515-476727f9df5e",
+      "server": "envoy",
+      "strict-transport-security": "max-age=31536000; includeSubDomains",
+      "x-nf-request-id": "01KJKJD4H1C666ZGXN7AR4K8V5",
+      "content-length": "79",
+      "x-envoy-upstream-service-time": "221",
+      "access-control-allow-origin": "*",
+      "x-podcache-hostname": "app501-us-east-2",
+      "x-ratelimit-limit": "500",
+      "x-ratelimit-remaining": "473",
+      "x-ratelimit-reset": "1772330785",
+      "content-encoding": "gzip",
+      "vary": "accept-encoding",
+      "x-cache": "Hit from cloudfront",
+      "via": "1.1 36b04143ac1626bb30bb225fb2cccb1e.cloudfront.net (CloudFront)",
+      "x-amz-cf-pop": "IAD12-P3",
+      "x-amz-cf-id": "pPlMN3XDuNJibHrc1VmUoq3Mduxm-I3eSg-wDQaM9tLMPuIa772Yfw=="
+    }
+  }
+}
