@@ -30,7 +30,8 @@ jobs:
         id: date
         run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_OUTPUT
 
-      - name: Commit and push changes
+      - name: Commit changes
+        id: auto-commit
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: RSS feed backup ${{ steps.date.outputs.date }}"
@@ -39,4 +40,21 @@ jobs:
           commit_author: "GitHub Actions Bot <actions@github.com>"
           file_pattern: "rss_feed_backup/*.xml rss_feed_backup/*.json"
           skip_dirty_check: false
-          skip_fetch: true
+          skip_push: true
+
+      - name: Push changes with retry
+        if: steps.auto-commit.outputs.changes_detected == 'true'
+        run: |
+          max_retries=3
+          for attempt in $(seq 1 $max_retries); do
+            echo "Push attempt $attempt of $max_retries"
+            if git push origin main; then
+              echo "Push succeeded on attempt $attempt"
+              exit 0
+            fi
+            echo "Push failed, pulling with rebase and retrying..."
+            git pull --rebase origin main
+            sleep $((attempt * 2))
+          done
+          echo "Push failed after $max_retries attempts"
+          exit 1
