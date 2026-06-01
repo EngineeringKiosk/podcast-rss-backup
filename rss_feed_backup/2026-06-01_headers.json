@@ -1,0 +1,45 @@
+{
+  "backup_timestamp": "2026-06-01T03:52:12.103864Z",
+  "url": "https://engineeringkiosk.dev/podcast/rss",
+  "request": {
+    "method": "GET",
+    "headers": {
+      "User-Agent": "curl/RSS-Backup-Script",
+      "Accept": "application/rss+xml, application/xml, text/xml, */*",
+      "Accept-Encoding": "gzip, deflate"
+    }
+  },
+  "response": {
+    "http_code": 200,
+    "headers": {
+      "status_line": "HTTP/2 200",
+      "date": "Mon, 01 Jun 2026 03:52:11 GMT",
+      "content-type": "text/xml",
+      "content-length": "79",
+      "location": "https://feeds.redcircle.com/0ecfdfd7-fda1-4c3d-9515-476727f9df5e",
+      "age": "12864",
+      "cache-control": "public,max-age=0,must-revalidate",
+      "cache-status": "\"Netlify Edge\"; hit",
+      "server": "envoy",
+      "strict-transport-security": "max-age=31536000; includeSubDomains",
+      "x-nf-request-id": "01KT0MYZBNWJ56E3QKNVVQ2BWF",
+      "cf-cache-status": "DYNAMIC",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=1ql11Mk%2Fo%2FP0vqSmeV0EphXEjgI9iVf4cHgqIjXw7pBI2qMJKOmvl28PW1%2B5hYinrjWJQTgPd1ID5Yu3ubweO%2Fs8WBwn8hA4aYn3rrhvWNL05QOxD%2BxZY%2Bojyp%2FtcvYqMaxsNTI6MA%3D%3D\"}]}",
+      "cf-ray": "a04b439b8ec613a5-ORD",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "content-encoding": "gzip",
+      "access-control-allow-origin": "*",
+      "x-podcache-hostname": "app547-us-east-2",
+      "x-ratelimit-limit": "500",
+      "x-ratelimit-remaining": "499",
+      "x-ratelimit-reset": "1780285991",
+      "x-envoy-upstream-service-time": "181",
+      "vary": "Accept-Encoding",
+      "x-cache": "Miss from cloudfront",
+      "via": "1.1 0142d305b3e474a9b94430d2414bf1b2.cloudfront.net (CloudFront)",
+      "x-amz-cf-pop": "ORD56-P9",
+      "x-amz-cf-id": "sm4jOHCDMCV9RRU8oCH4b5Iha1vWEvxrHtdNT2-ncctptaxF_jSSzg=="
+    }
+  }
+}
